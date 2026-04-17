@@ -26,7 +26,7 @@ formInput.addEventListener("submit", (e) => {
 
   const divResult = document.querySelector("#resultDiv");
 
-  coloreieData(inputValue);
+  // coloreieData(inputValue);
 
   // formInput.classList.add("hidden");
   divResult.classList.remove("hidden");
@@ -60,8 +60,13 @@ function renderFoods() {
 
     //creating span to hold foodItem text
     const span = document.createElement("span");
-    span.textContent = foodItem;
+    span.textContent = `${foodItem}... g`;
 
+    //handle fetched data to rneder
+
+    coloreieData(foodItem, span);
+
+    
     //cretae Delete btn
     const DeleteBtn = document.createElement("button");
     DeleteBtn.textContent = "🗑️";
@@ -149,7 +154,7 @@ function renderFoods() {
 
 //fetching colorie data
 
-async function coloreieData(inputValue) {
+async function coloreieData(inputValue, span) {
   const API_url = `https://api.api-ninjas.com/v1/nutrition?query=${inputValue}`;
 
   const response = await fetch(API_url, {
@@ -161,5 +166,10 @@ async function coloreieData(inputValue) {
   });
   const data = await response.json();
 
-  console.log(data);
+  // console.log(data.fat_total_g);
+    if (data.length > 0) {
+    span.textContent = `${inputValue} ${data[0].fat_total_g} g`;
+  } else {
+    span.textContent = `${inputValue} (no data)`;
+  }
 }
