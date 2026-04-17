@@ -22,9 +22,11 @@ formInput.addEventListener("submit", (e) => {
 
   input.value = "";
 
-  const btn = document.querySelector("button");
+  // const btn = document.querySelector("button");  never used
 
   const divResult = document.querySelector("#resultDiv");
+
+  coloreieData(inputValue);
 
   // formInput.classList.add("hidden");
   divResult.classList.remove("hidden");
@@ -38,13 +40,11 @@ function renderFoods() {
 
   showItemList.innerHTML = "";
 
-  console.log(showItemList);
+  // console.log(showItemList);
 
-  const getItemsFromLostore = localStorage.getItem("food" || []);
+  const getItemsFromLostore = localStorage.getItem("food");
 
-  //  ❌ ERROR 4: If localStorage is empty → JSON.parse(null) = null → crash in forEach
-
-  let NewFood = JSON.parse(getItemsFromLostore);
+  let NewFood = JSON.parse(getItemsFromLostore) || [];
 
   NewFood.forEach((foodItem, index) => {
     const li = document.createElement("li");
@@ -96,7 +96,7 @@ function renderFoods() {
       input.type = "text";
       input.value = foodItem;
       input.classList.add("border", "px-2");
-
+      //  console.log("Clicked")
       // create save btn
 
       const saveBtn = document.createElement("button");
@@ -109,10 +109,12 @@ function renderFoods() {
         "ml-2",
       );
       //replace span with input
-      li.replaceChild(input, span);
+      // li.replaceChild(input, span);
+        span.replaceWith(input);
 
       // replace Edit btn with save btn
-      li.replaceChild(saveBtn, editBtn);
+      // li.replaceChild(saveBtn, editBtn);
+       editBtn.replaceWith(saveBtn);
 
       // =========================
       // 💾 SAVE LOGIC
@@ -136,11 +138,28 @@ function renderFoods() {
     const span2 = document.createElement("span");
     span2.appendChild(editBtn);
     span2.appendChild(DeleteBtn);
-    span2.classList.add("pr-4")
+    span2.classList.add("pr-4");
 
     li.appendChild(span);
     li.appendChild(span2);
 
     showItemList.appendChild(li);
   });
+}
+
+//fetching colorie data
+
+async function coloreieData(inputValue) {
+  const API_url = `https://api.api-ninjas.com/v1/nutrition?query=${inputValue}`;
+
+  const response = await fetch(API_url, {
+    method: "GET",
+    headers: {
+      "X-Api-Key": "RFU2co6lvB36uZtgt4GOsQofzzr7LSGK6tqrRiOr",
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+
+  console.log(data);
 }
