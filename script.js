@@ -4,6 +4,11 @@
 
 const formInput = document.querySelector("form");
 
+
+if (formInput){
+
+
+
 formInput.addEventListener("submit", (e) => {
   e.preventDefault();
 
@@ -32,6 +37,7 @@ formInput.addEventListener("submit", (e) => {
   divResult.classList.remove("hidden");
   renderFoods();
 });
+}
 
 function renderFoods() {
   // ⚠️ Clear list first to avoid duplicates when re-rendering
@@ -60,8 +66,14 @@ function renderFoods() {
 
     //creating span to hold foodItem text
     const span = document.createElement("span");
+
+
+
     span.textContent = `${foodItem}... g`;
 
+
+
+    
     //handle fetched data to rneder
 
     coloreieData(foodItem, span);
@@ -154,24 +166,21 @@ function renderFoods() {
 //fetching colorie data
 
 async function coloreieData(inputValue, span) {
-  const API_url = `https://api.api-ninjas.com/v1/nutrition?query=${inputValue}`;
+  const API_url = `https://api.api-ninjas.com/v1/nutrition?query=${inputValue}`
+  
+//
 
-  try {
-    const response = await fetch(API_url, {
-      method: "GET",
-      headers: {
-        "X-Api-Key": "RFU2co6lvB36uZtgt4GOsQofzzr7LSGK6tqrRiOr",
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
+  const response = await fetch(API_url, {
+    method: "GET",
+    headers: {
+      "X-Api-Key": "RFU2co6lvB36uZtgt4GOsQofzzr7LSGK6tqrRiOr",
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+  console.log(data[0].fat_total_g);
 
-    // console.log(data.fat_total_g);
-    data.length > 0
-      ? (span.textContent = `${inputValue} ${data[0].fat_total_g} g`)
-      : (span.textContent = `${inputValue} (no data)`);
-  } catch (err) {
-    console.error(err);
-  } finally {
-  }
+  data.length > 0
+    ? (span.textContent = `${inputValue} ${data[0].fat_total_g} g`)
+    : (span.textContent = `${inputValue} (no data)`);
 }
